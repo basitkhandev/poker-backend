@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "pmjwsyndzqhnie",
+    "password": "2a4a16c011e847a1eceb0e524ca26f3988c782a22c70af7d83a5bed3333fb224",
+    "database": "d2g15ps5np99m2",
+    "host": "ec2-54-243-32-226.compute-1.amazonaws.com",
+    "dialect": "postgres"
+    
+  },
+  "test": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
