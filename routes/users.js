@@ -53,7 +53,7 @@ router.post(
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // Validate the request body
     const errors = validationResult(req);
@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Check if the user exists
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({ error: "Invalid username or password" });
     }
@@ -90,23 +90,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /api/users:
- *   get:
- *     summary: Get all users.
- *     security:
- *       - JWT: []
- *     responses:
- *       200:
- *         description: A list of users.
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/User'
- */
 router.get("/", authenticateJWT, async (req, res) => {
   try {
     const users = await User.findAll();
@@ -151,6 +134,28 @@ router.post("/forgot-password", async (req, res) => {
 
     // res.json({ message: 'Password reset instructions sent to your email' });
     res.json({ resetToken: resetToken });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.post("/change-password", authenticateJWT, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the user with the provided email exists
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update user with reset token and expiration
+    await user.update({ password: hashedPassword });
+    res.json({ message: "Password Updated" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

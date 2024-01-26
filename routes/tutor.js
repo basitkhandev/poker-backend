@@ -1,6 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { Tutor, TutorExpertise, TutorRating } = require("../models");
+const {
+  Tutor,
+  TutorExpertise,
+  TutorRating,
+  TutorCourse,
+  TutorOrder,
+  TutorCourseAdditionalInformation,
+  TutorCourseFrequentlyQuestions,
+  TutorFrequentlyQuestion,
+} = require("../models");
 
 router.get("/", async (req, res) => {
   try {
@@ -8,10 +17,26 @@ router.get("/", async (req, res) => {
       include: [
         {
           model: TutorExpertise,
-          attributes: ["tags", "games", "gameTypes", "stakes", "additionalSS"],
         },
         {
           model: TutorRating,
+        },
+        {
+          model: TutorCourse,
+          include: [
+            {
+              model: TutorCourseAdditionalInformation,
+            },
+            {
+              model: TutorCourseFrequentlyQuestions,
+            },
+          ],
+        },
+        {
+          model: TutorOrder,
+        },
+        {
+          model: TutorFrequentlyQuestion,
         },
       ],
     });
@@ -25,7 +50,38 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const tutor = await Tutor.findByPk(id);
+    const tutor = await Tutor.findByPk(id, {
+      include: [
+        {
+          model: TutorExpertise,
+        },
+        {
+          model: TutorRating,
+        },
+        {
+          model: TutorCourse,
+          include: [
+            {
+              model: TutorCourseAdditionalInformation,
+            },
+            {
+              model: TutorCourseFrequentlyQuestions,
+            },
+          ],
+        },
+        {
+          model: TutorOrder,
+          include: [
+            {
+              model: TutorCourse,
+            },
+          ],
+        },
+        {
+          model: TutorFrequentlyQuestion,
+        },
+      ],
+    });
 
     if (!tutor) {
       return res.status(404).json({ error: "Tutor not found" });
