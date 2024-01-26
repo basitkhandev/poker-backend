@@ -11,23 +11,11 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-  console.log("if----------------------------------");
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  console.log(
-    "else----------------------------------",
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
+  console.log(config.database, config.username, config.password, config);
 
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  );
+  sequelize = new Sequelize(config);
 }
 
 fs.readdirSync(__dirname)

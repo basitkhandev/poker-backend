@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Tutor.hasMany(models.TutorExpertise, { foreignKey: "tutorId" });
       Tutor.hasMany(models.TutorRating, { foreignKey: "tutorId" });
+      Tutor.hasMany(models.TutorCourse, { foreignKey: "tutorId" });
+      Tutor.hasMany(models.TutorOrder, { foreignKey: "tutorId" });
+      Tutor.hasMany(models.TutorFrequentlyQuestion, { foreignKey: "tutorId" });
     }
   }
   Tutor.init(
